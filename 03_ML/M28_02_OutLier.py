@@ -25,7 +25,7 @@ def outlier(data_out):
 
         m = np.where((data_out[:, i]>upper_bound) | (data_out[:, i]<lower_bound))
         n = np.count_nonzero((data_out[:, i]>upper_bound) | (data_out[:, i]<lower_bound))
-        lis.append([m, 'outlier_num:', n])
+        lis.append([i+1,'columns', m, 'outlier_num :', n])
 
     return np.array(lis)
 
