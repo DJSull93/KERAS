@@ -55,8 +55,8 @@ def create_hyperparameter():
     activation = ['selu','relu']
     dropout = [0.3, 0.5]
     node = [64, 128]
-    epochs = [1, 2]
-    validation_split = [0.1, 0.2]
+    epochs = [100, 200]
+    validation_split = [0.15, 0.2]
     learning_rate = [0.001, 0.01]
     return {"batch_size":batches,# "optimizer":optimizer,
             "drop":dropout, "activation":activation,
@@ -92,8 +92,8 @@ acc = model.score(x_train, y_train)
 print('final_score :', acc)
 
 '''
-best_params_ : {'validation_split': 0.2, 'node': 64, 'learning_rate': 0.01, 'epochs': 2, 'drop': 0.5, 'batch_size': 2000, 'activation': 'relu'}     
-best_estimator_ : <tensorflow.python.keras.wrappers.scikit_learn.KerasClassifier object at 0x0000021CAF906E80>
-best_score_ : 0.82421875
-final_score : 0.708984375
+best_params_ : {'validation_split': 0.15, 'node': 64, 'learning_rate': 0.001, 'epochs': 100, 'drop': 0.3, 'batch_size': 2000, 'activation': 'relu'}
+best_estimator_ : <tensorflow.python.keras.wrappers.scikit_learn.KerasClassifier object at 0x0000015CC1DD00D0>
+best_score_ : 0.91015625
+final_score : 0.912109375
 '''
