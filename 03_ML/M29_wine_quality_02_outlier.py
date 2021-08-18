@@ -1,13 +1,22 @@
+# Practice : check outlier
+# outlier number check add 
+
+from sklearn.metrics import r2_score
+from sklearn.model_selection import train_test_split
 import numpy as np
-import warnings
-warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
+import pandas as pd
 
-aaa = np.array([[1,2,10000,3,4,6,7,8,90,100,5000],
-                [1000,2000,3,4000,5000,6000,7000,8,9000,10000,1001]])
+# 1. data
+datasets = pd.read_csv('../_data/winequality-white.csv', sep=';',
+                       index_col=None, header=0 ) # (4898, 12)
 
-aaa = aaa.transpose()
-print(aaa.shape)
+datasets = datasets.values
 
+x = datasets[:,0:11] # (4898, 11)
+y = datasets[:,[11]] # (4898, 10)
+
+x_train, x_test, y_train, y_test = train_test_split(x, y,
+      test_size=0.15, shuffle=True, random_state=24)
 
 def outlier(data_out):
     lis = []
@@ -25,15 +34,9 @@ def outlier(data_out):
 
         m = np.where((data_out[:, i]>upper_bound) | (data_out[:, i]<lower_bound))
         n = np.count_nonzero((data_out[:, i]>upper_bound) | (data_out[:, i]<lower_bound))
-        lis.append([m, 'outlier_num:', n])
+        lis.append([i+1,'columns', m, 'outlier_num:', n])
 
     return np.array(lis)
 
-outliers_loc = outlier(aaa)
+outliers_loc = outlier(x_train)
 print("outlier at :", outliers_loc) 
-
-# box ploting 
-# import matplotlib.pyplot as plt
-
-# plt.boxplot(aaa)
-# plt.show()
