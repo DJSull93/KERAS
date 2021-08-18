@@ -44,7 +44,7 @@ def build_model(drop=0.5, node=2, activation='relu', learning_rate=0.001):
     return model                    
 
 def create_hyperparameter():
-    batches = [1]# ,50]
+    batches = [100]
     # optimizer = [Adam, RMSprop, Adadelta]
     activation = ['selu','relu']
     dropout = [0.3]
@@ -86,8 +86,10 @@ acc = model.score(x_train, y_train)
 print('final_score :', acc)
 
 '''
-best_params_ : {'batch_size': 1000, 'drop': 0.3, 'optimizer': 'adam'}     
-best_estimator_ : <tensorflow.python.keras.wrappers.scikit_learn.KerasClassifier object at 0x0000028196E13CD0>
-best_score_ : 0.9383499920368195
-final_score : 0.9659666419029236
+best_params_ : {'validation_split': 0.1, 'node': 24, 
+            'learning_rate': 0.001, 'epochs': 2, 
+            'drop': 0.3, 'batch_size': 100, 'activation': 'relu'}
+best_estimator_ : <tensorflow.python.keras.wrappers.scikit_learn.KerasClassifier object at 0x00000288F46BB640>
+best_score_ : 0.9358333349227905
+final_score : 0.9466999769210815
 '''
