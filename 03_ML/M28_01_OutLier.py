@@ -38,10 +38,9 @@ print("outlier at :", outliers_loc)
 1. 삭제
 2. Nan 처리후 보간 // linear
 3. -------------- 결측치 처리 방법과 유사
+4. scaler -> Rubster, Quantile scaler : 이상치에 둔감함
+5. modeling -> tree 계열, XG, LGBM, DT, RF
 '''
-
-
-
 
 # # box ploting 
 # import matplotlib.pyplot as plt
