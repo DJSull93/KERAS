@@ -53,7 +53,7 @@ print("==================SMOTE==================")
 
 smote = SMOTE(random_state=77, k_neighbors=3)
 # k_neighbors : int or object, optional (default=5)
-# k_neighbors 줄어들면 > 연산양 줄어듦 -> 성능 하락
+# k_neighbors 줄어들면 > 연산 줄어듦 -> 성능 하락
 
 x_smote, y_smote = smote.fit_resample(x_train, y_train)
 

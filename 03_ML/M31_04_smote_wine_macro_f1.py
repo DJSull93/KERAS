@@ -1,3 +1,6 @@
+# macro f1 score
+
+from numpy.lib.function_base import average
 import pandas as pd
 import numpy as np
 from xgboost import XGBClassifier
@@ -6,6 +9,8 @@ from imblearn.over_sampling import SMOTE
 import time
 import warnings
 warnings=warnings.filterwarnings('ignore')
+
+from sklearn.metrics import accuracy_score, f1_score
 
 # 1. data
 datasets = pd.read_csv('../_data/winequality-white.csv', sep=';',
@@ -28,8 +33,8 @@ y = np.array(y)
 ##############################################
 #                label merge
 ##############################################
-print("=================================================")
 
+# Mine
 # for i in range(y.shape[0]):
 #     if y[i] == 9.0:
 #         y[i] = 8.0
@@ -38,26 +43,16 @@ print("=================================================")
 #     elif y[i] == 4.0:
 #         y[i] = 5.0
 
-newlist = []
-for i in list(y):
-    if i <= 4:
-        newlist += [0]
-    elif i <= 7:
-        newlist += [1]
-    else:
-        newlist += [2]
-
-y = np.array(newlist) # (4898,)
-
-# for index, value in enumerate(y):
-#     if value == 3.0:
-#         y[index] = 4.0
-#     elif value == 7.0:
-#         y[index] = 6.0
-#     elif value == 5.0:
-#         y[index] = 6.0
-#     elif value == 9.0:
-#         y[index] = 8.0        
+# Class
+for index, value in enumerate(y):
+    if value == 3.0:
+        y[index] = 4.0
+    elif value == 5.0:
+        y[index] = 6.0
+    elif value == 7.0:
+        y[index] = 6.0
+    elif value == 9.0:
+        y[index] = 8.0        
 
 # print(pd.Series(y).value_counts())
 # 6.0    2198
@@ -67,13 +62,13 @@ y = np.array(newlist) # (4898,)
 # 8.0     180
 
 x_train, x_test, y_train, y_test = train_test_split(x, y,
-      test_size=0.2, shuffle=True, random_state=77, stratify=y)
+      test_size=0.2, shuffle=True, random_state=777, stratify=y)
 
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler, QuantileTransformer, PowerTransformer
-scaler = RobustScaler()
-scaler.fit(x_train) 
-x_train = scaler.transform(x_train) 
-x_test = scaler.transform(x_test) 
+# from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler, QuantileTransformer, PowerTransformer
+# scaler = RobustScaler()
+# scaler.fit(x_train) 
+# x_train = scaler.transform(x_train) 
+# x_test = scaler.transform(x_test) 
 
 # print(pd.Series(y_train).value_counts())
 
@@ -86,11 +81,13 @@ model.fit(x_train, y_train, eval_metric='mlogloss')
 # 4. eval
 score = model.score(x_test, y_test)
 
+y_pred = model.predict(x_test)
+f1 = f1_score(y_test, y_pred, average='macro')
 
 print("==================SMOTE==================")
 
 st = time.time()
-smote = SMOTE(random_state=77, k_neighbors=140)
+smote = SMOTE(random_state=77, k_neighbors=60)
 et = time.time() - st
 x_smote, y_smote = smote.fit_resample(x_train, y_train)
 
@@ -105,6 +102,9 @@ model2.fit(x_smote, y_smote, eval_metric='mlogloss')
 # 4. eval
 score2 = model2.score(x_test, y_test)
 
+y_pred2 = model2.predict(x_test)
+f12 = f1_score(y_test, y_pred2, average='macro')
+
 print("before smote :", x_train.shape, y_train.shape)
 print("after smote  :", x_smote.shape, y_smote.shape)
 print("before somote labels :\n",pd.Series(y_train).value_counts())
@@ -112,25 +112,11 @@ print("after somote labels  :\n",pd.Series(y_smote).value_counts())
 
 print("model_best_score_default :", score)
 print("model_best_score_smote   :", score2)
-print("time : ", et)
-'''
-3,4,5 | 6,7 | 8,9
-before smote : (3918, 11) (3918,)
-after smote  : (5274, 11) (5274,)
-before somote labels :
- 6.0    1758
-5.0    1312
-8.0     848
-dtype: int64
-after somote labels  :
- 6.0    1758
-5.0    1758
-8.0    1758
-dtype: int64
-model_best_score_default : 0.7193877551020408
-model_best_score_smote   : 0.7285714285714285
+print("f1_score_default:", f1)
+print("f1_score_smote  :", f12)
 
-3,4 | 5,6,7 | 8,9 // robust
+'''
+3,4 | 5,6,7 | 8,9, rs = 777, 77, test 0.2, k_ne = 60
 before smote : (3918, 11) (3918,)
 after smote  : (10884, 11) (10884,)
 before somote labels :
@@ -143,6 +129,8 @@ after somote labels  :
 4.0    3628
 8.0    3628
 dtype: int64
-model_best_score_default : 0.9469387755102041
-model_best_score_smote   : 0.9336734693877551
+model_best_score_default : 0.9428571428571428
+model_best_score_smote   : 0.9306122448979591
+f1_score_default: 0.6208949096880132
+f1_score_smote  : 0.635165944302111
 '''
