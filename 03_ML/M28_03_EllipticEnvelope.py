@@ -14,3 +14,7 @@ outliers.fit(aaa)
 
 result = outliers.predict(aaa)
 print(result)
+
+'''
+[ 1  1 -1  1  1  1  1  1  1  1 -1]
+'''
