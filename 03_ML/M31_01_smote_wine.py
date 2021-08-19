@@ -3,6 +3,8 @@
 # 라벨 불균형에 대해 검증 - 재현율, 정밀도, f1 score
 # 적은 라벨 증폭 -> smote
 
+# smote -> kneighbors 기반으로 증폭
+
 from imblearn.over_sampling import SMOTE
 
 from sklearn.datasets import load_wine

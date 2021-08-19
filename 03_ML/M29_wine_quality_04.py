@@ -2,7 +2,6 @@
 # label -> 3,4 :0, 5,6,7 :1, 8,9 :2 change
 # 라벨 수정 권한 존재할 시에만 가능함
 
-from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
