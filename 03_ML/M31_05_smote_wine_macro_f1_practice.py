@@ -1,4 +1,7 @@
-# macro f1 score
+# Practice
+# 3,4,5 > 0
+# 6 > 1
+# 7,8,9 > 2
 
 import pandas as pd
 import numpy as np
@@ -21,33 +24,17 @@ x = datasets[:,0:11] # (4898, 11)
 y = datasets[:,11] # (4898,)
 y = np.array(y)
 # print(pd.Series(y).value_counts())
-# 6.0    2198
-# 5.0    1457
-# 7.0     880
-# 8.0     175
-# 4.0     163
-# 3.0      20
-# 9.0       5 <- too small, merge with 8
 
 ##############################################
 #                label merge
 ##############################################
 
-# Mine
-# for i in range(y.shape[0]):
-#     if y[i] == 9.0:
-#         y[i] = 8.0
-#     elif y[i] == 7.0:
-#         y[i] = 8.0
-#     elif y[i] == 4.0:
-#         y[i] = 5.0
-
 # Class
 newlist = []
 for i in list(y):
-    if i <= 4:
+    if i <= 5:
         newlist += [0]
-    elif i <= 7:
+    elif i <= 6:
         newlist += [1]
     else:
         newlist += [2]
@@ -116,21 +103,21 @@ print("f1_score_default:", f1)
 print("f1_score_smote  :", f12)
 
 '''
-3,4 0 | 5,6,7 1 | 8,9, 2 // rs = 66, 66, test 0.2, k_ne = 60
+3,4,5 0 | 6 1 | 7,8,9, 2 // rs = 66, 66, test 0.2, k_ne = 60
 before smote : (3918, 11) (3918,)
-after smote  : (10884, 11) (10884,)
+after smote  : (5247, 11) (5247,)
 before somote labels :
- 1    3628
-2     149
-0     141
+ 1    1749
+0    1319
+2     850
 dtype: int64
 after somote labels  :
- 0    3628
-1    3628
-2    3628
+ 0    1749
+1    1749
+2    1749
 dtype: int64
-model_best_score_default : 0.9469387755102041
-model_best_score_smote   : 0.9428571428571428
-f1_score_default: 0.6798437163954406
-f1_score_smote  : 0.718421052631579
+model_best_score_default : 0.7071428571428572
+model_best_score_smote   : 0.7071428571428572
+f1_score_default: 0.7057939174285153
+f1_score_smote  : 0.7081562430460684
 '''

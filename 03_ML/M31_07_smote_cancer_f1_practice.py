@@ -1,9 +1,13 @@
-# macro f1 score
+# Practice
+# make cancer smote
+# f1 score
+# label 0 -> 112 delete 
 
-import pandas as pd
-import numpy as np
-from xgboost import XGBClassifier
+from xgboost import  XGBClassifier
 from sklearn.model_selection import train_test_split
+import numpy as np
+import pandas as pd
+from sklearn.datasets import load_breast_cancer
 from imblearn.over_sampling import SMOTE
 import time
 import warnings
@@ -11,55 +15,32 @@ warnings=warnings.filterwarnings('ignore')
 
 from sklearn.metrics import accuracy_score, f1_score
 
+# 1-1. data
+datasets = load_breast_cancer()
+
 # 1. data
-datasets = pd.read_csv('../_data/winequality-white.csv', sep=';',
-                       index_col=None, header=0 ) # (4898, 12)
-
-datasets = datasets.values
-
-x = datasets[:,0:11] # (4898, 11)
-y = datasets[:,11] # (4898,)
-y = np.array(y)
-# print(pd.Series(y).value_counts())
-# 6.0    2198
-# 5.0    1457
-# 7.0     880
-# 8.0     175
-# 4.0     163
-# 3.0      20
-# 9.0       5 <- too small, merge with 8
-
-##############################################
-#                label merge
-##############################################
-
-# Mine
-# for i in range(y.shape[0]):
-#     if y[i] == 9.0:
-#         y[i] = 8.0
-#     elif y[i] == 7.0:
-#         y[i] = 8.0
-#     elif y[i] == 4.0:
-#         y[i] = 5.0
-
-# Class
-newlist = []
-for i in list(y):
-    if i <= 4:
-        newlist += [0]
-    elif i <= 7:
-        newlist += [1]
-    else:
-        newlist += [2]
-
-y = np.array(newlist) # (4898,)    
+x = datasets.data
+y = datasets.target
 
 # print(pd.Series(y).value_counts())
-# 6.0    2198
-# 5.0    1457
-# 7.0     880
-# 4.0     183
-# 8.0     180
+
+# print(x.shape, y.shape) # (569, 30) (569,)
+y = np.array(y).reshape(569,1)
+# print(y.shape)
+
+dasd = np.concatenate((x,y), axis=1)
+# print(dasd)
+
+dasd = dasd[dasd[:, 30].argsort()]
+# print(dasd)
+
+x = dasd[112:,0:-1] 
+y = dasd[112:,-1]
+
+# print(x.shape, y.shape)
+# print(y)
+
+# print(pd.Series(y).value_counts())
 
 x_train, x_test, y_train, y_test = train_test_split(x, y,
       test_size=0.2, shuffle=True, random_state=66) # , stratify=y)
@@ -82,7 +63,7 @@ model.fit(x_train, y_train, eval_metric='mlogloss')
 score = model.score(x_test, y_test)
 
 y_pred = model.predict(x_test)
-f1 = f1_score(y_test, y_pred, average='macro')
+f1 = f1_score(y_test, y_pred)
 
 print("==================SMOTE==================")
 
@@ -103,7 +84,7 @@ model2.fit(x_smote, y_smote, eval_metric='mlogloss')
 score2 = model2.score(x_test, y_test)
 
 y_pred2 = model2.predict(x_test)
-f12 = f1_score(y_test, y_pred2, average='macro')
+f12 = f1_score(y_test, y_pred2)
 
 print("before smote :", x_train.shape, y_train.shape)
 print("after smote  :", x_smote.shape, y_smote.shape)
@@ -116,21 +97,18 @@ print("f1_score_default:", f1)
 print("f1_score_smote  :", f12)
 
 '''
-3,4 0 | 5,6,7 1 | 8,9, 2 // rs = 66, 66, test 0.2, k_ne = 60
-before smote : (3918, 11) (3918,)
-after smote  : (10884, 11) (10884,)
+before smote : (365, 30) (365,)
+after smote  : (580, 30) (580,)
 before somote labels :
- 1    3628
-2     149
-0     141
+ 1.0    290
+0.0     75
 dtype: int64
 after somote labels  :
- 0    3628
-1    3628
-2    3628
+ 0.0    290
+1.0    290
 dtype: int64
-model_best_score_default : 0.9469387755102041
-model_best_score_smote   : 0.9428571428571428
-f1_score_default: 0.6798437163954406
-f1_score_smote  : 0.718421052631579
+model_best_score_default : 0.9456521739130435
+model_best_score_smote   : 0.9565217391304348
+f1_score_default: 0.9640287769784173
+f1_score_smote  : 0.9710144927536231
 '''
