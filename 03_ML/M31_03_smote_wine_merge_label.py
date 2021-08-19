@@ -1,5 +1,3 @@
-# k_neighbors
-
 import pandas as pd
 import numpy as np
 from xgboost import XGBClassifier
@@ -17,7 +15,7 @@ datasets = datasets.values
 
 x = datasets[:,0:11] # (4898, 11)
 y = datasets[:,11] # (4898,)
-
+y = np.array(y)
 # print(pd.Series(y).value_counts())
 # 6.0    2198
 # 5.0    1457
@@ -25,8 +23,26 @@ y = datasets[:,11] # (4898,)
 # 8.0     175
 # 4.0     163
 # 3.0      20
-# 9.0       5
+# 9.0       5 <- too small, merge with 8
 
+##############################################
+#                label merge
+##############################################
+print("=================================================")
+
+for i in range(y.shape[0]):
+    if y[i] == 9.0:
+        y[i] = 8.0
+
+print(pd.Series(y).value_counts())
+# 6.0    2198
+# 5.0    1457
+# 7.0     880
+# 8.0     180
+# 4.0     163
+# 3.0      20
+
+'''
 x_train, x_test, y_train, y_test = train_test_split(x, y,
       test_size=0.2, shuffle=True, random_state=77, stratify=y)
 
@@ -75,28 +91,7 @@ print("after somote labels  :\n",pd.Series(y_smote).value_counts())
 
 print("model_best_score_default :", score)
 print("model_best_score_smote   :", score2)
-
 '''
-before smote : (3918, 11) (3918,)
-after smote  : (12306, 11) (12306,)
-before somote labels :
- 6.0    1758
-5.0    1166
-7.0     704
-8.0     140
-4.0     130
-3.0      16
-9.0       4
-dtype: int64
-after somote labels  :
- 6.0    1758
-5.0    1758
-4.0    1758
-9.0    1758
-8.0    1758
-7.0    1758
-3.0    1758
-dtype: int64
-model_best_score_default : 0.6591836734693878
-model_best_score_smote   : 0.639795918367347
+'''
+
 '''
