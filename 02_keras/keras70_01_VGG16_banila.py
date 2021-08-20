@@ -5,8 +5,6 @@
 #  학습 데이터셋 용량은 약 138GB, 검증 데이터셋 용량은 약 6GB
 #  학습 데이터 각 클래스당 약 1,000개가량의 사진으로 구성
 
-
-
 import pandas as pd
 import numpy as np
 from tensorflow.keras.models import Sequential 
@@ -22,7 +20,7 @@ model.trainable = False
 # print(len(model.weights)) # 26
 # print(len(model.trainable_weights)) # 26 : T, 0 : F
 
-# model.summary()
+model.summary()
 
 # input_1 (InputLayer)         [(None, 224, 224, 3)]     0
 # block1_conv1 (Conv2D)        (None, 224, 224, 64)      1792
