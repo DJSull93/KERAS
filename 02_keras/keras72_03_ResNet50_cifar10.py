@@ -57,8 +57,8 @@ m.trainable = True # Freeze weight or train
 model = Sequential()
 
 model.add(m)
-# model.add(Flatten())
-model.add(GlobalAveragePooling2D())
+model.add(Flatten())
+# model.add(GlobalAveragePooling2D())
 model.add(Dense(2048, activation='relu'))
 model.add(Dropout(0.1))
 model.add(Dense(256, activation='relu'))
@@ -160,7 +160,16 @@ loss :  3.14936
 val_loss :  3.42256
 
 trainable T / GlobalAVGP
+total time :  6.0 min
+acc :  0.99166
+val_acc :  0.5256
+loss :  0.0264
+val_loss :  3.35024
 
 trainable T / Flatten
-
+total time :  2.0 min
+acc :  0.69225
+val_acc :  0.0152
+loss :  1.07189
+val_loss :  7.31808
 '''

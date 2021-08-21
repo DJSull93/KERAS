@@ -5,7 +5,7 @@
 import pandas as pd
 import numpy as np
 from tensorflow.keras.models import Sequential 
-from tensorflow.keras.layers import Dense, Flatten, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, Flatten, GlobalAveragePooling2D, UpSampling2D
 from tensorflow.keras.applications import VGG16, VGG19, Xception
 from tensorflow.keras.applications import ResNet101, ResNet101V2
 from tensorflow.keras.applications import ResNet152, ResNet152V2
@@ -18,16 +18,16 @@ from tensorflow.keras.applications import EfficientNetB0, EfficientNetB1, Effici
 from tensorflow.python.keras.layers.core import Dropout
 
 # 1. data cifa10
-x_train = np.load('./_save/_NPY/k55_x_data_cifar10_train.npy')
-x_test = np.load('./_save/_NPY/k55_x_data_cifar10_test.npy')
-y_train = np.load('./_save/_NPY/k55_y_data_cifar10_train.npy')
-y_test = np.load('./_save/_NPY/k55_y_data_cifar10_test.npy')
+# x_train = np.load('./_save/_NPY/k55_x_data_cifar10_train.npy')
+# x_test = np.load('./_save/_NPY/k55_x_data_cifar10_test.npy')
+# y_train = np.load('./_save/_NPY/k55_y_data_cifar10_train.npy')
+# y_test = np.load('./_save/_NPY/k55_y_data_cifar10_test.npy')
 
 # 1. data cifa100
-# x_train = np.load('./_save/_NPY/k55_x_data_cifar100_train.npy')
-# x_test = np.load('./_save/_NPY/k55_x_data_cifar100_test.npy')
-# y_train = np.load('./_save/_NPY/k55_y_data_cifar100_train.npy')
-# y_test = np.load('./_save/_NPY/k55_y_data_cifar100_test.npy')
+x_train = np.load('./_save/_NPY/k55_x_data_cifar100_train.npy')
+x_test = np.load('./_save/_NPY/k55_x_data_cifar100_test.npy')
+y_train = np.load('./_save/_NPY/k55_y_data_cifar100_train.npy')
+y_test = np.load('./_save/_NPY/k55_y_data_cifar100_test.npy')
 
 x_train = x_train.reshape(50000, 32*32*3)
 x_test = x_test.reshape(10000, 32*32*3)
@@ -50,20 +50,21 @@ y_test = one.transform(y_test).toarray() # (10000, 10)
 
 # 2. model
 m = InceptionV3(weights='imagenet', include_top=False, 
-                input_shape=(32,32,3))
+                input_shape=(96,96,3))
 m.trainable = True # Freeze weight or train
 # m.trainable = False # Freeze weight or train
 
 model = Sequential()
 
+model.add(UpSampling2D(size=(3,3)))
 model.add(m)
-# model.add(Flatten())
-model.add(GlobalAveragePooling2D())
+model.add(Flatten())
+# model.add(GlobalAveragePooling2D())
 model.add(Dense(2048, activation='relu'))
 model.add(Dropout(0.1))
 model.add(Dense(256, activation='relu'))
-model.add(Dense(10, activation='softmax')) # cifar10
-# model.add(Dense(100, activation='softmax')) # cifar100
+# model.add(Dense(10, activation='softmax')) # cifar10
+model.add(Dense(100, activation='softmax')) # cifar100
 
 # 3. comple fit // metrics 'acc'
 from tensorflow.keras.optimizers import Adam
@@ -81,7 +82,7 @@ lr = ReduceLROnPlateau(monitor='val_loss', patience=5,
 
 import time 
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=100, batch_size=1024, verbose=2,
+hist = model.fit(x_train, y_train, epochs=100, batch_size=256, verbose=2,
     validation_split=0.05, callbacks=[es, lr])
 end_time = time.time() - start_time
 
@@ -117,22 +118,59 @@ val_loss :  2.25513
 
 ###############cifar10###############
 trainable F / GlobalAVGP
-
+total time :  2.0 min
+acc :  0.76878
+val_acc :  0.6904
+loss :  0.65848
+val_loss :  0.92941
 
 trainable F / Flatten
+total time :  2.0 min
+acc :  0.74495
+val_acc :  0.6804
+loss :  0.73456
+val_loss :  0.94944
 
 trainable T / GlobalAVGP
+total time :  13.0 min
+acc :  0.98331
+val_acc :  0.886
+loss :  0.05311
+val_loss :  0.49121
 
 trainable T / Flatten
-
+total time :  15.0 min
+acc :  0.9916
+val_acc :  0.8608
+loss :  0.02635
+val_loss :  0.68571
 
 ###############cifar100###############
 trainable F / GlobalAVGP
+total time :  2.0 min
+acc :  0.51404
+val_acc :  0.3812
+loss :  1.79844
+val_loss :  2.43393
 
 trainable F / Flatten
+total time :  2.0 min
+acc :  0.57827
+val_acc :  0.394
+loss :  1.54525
+val_loss :  2.42447
 
 trainable T / GlobalAVGP
+total time :  10.0 min
+acc :  0.82676
+val_acc :  0.5
+loss :  0.57169
+val_loss :  2.3461
 
 trainable T / Flatten
-
+total time :  10.0 min
+acc :  0.84552
+val_acc :  0.504
+loss :  0.50591
+val_loss :  2.45141
 '''

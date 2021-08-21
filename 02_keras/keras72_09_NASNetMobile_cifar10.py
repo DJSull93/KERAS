@@ -5,7 +5,7 @@
 import pandas as pd
 import numpy as np
 from tensorflow.keras.models import Sequential 
-from tensorflow.keras.layers import Dense, Flatten, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, Flatten, GlobalAveragePooling2D, UpSampling2D
 from tensorflow.keras.applications import VGG16, VGG19, Xception
 from tensorflow.keras.applications import ResNet101, ResNet101V2
 from tensorflow.keras.applications import ResNet152, ResNet152V2
@@ -50,17 +50,18 @@ y_test = one.transform(y_test).toarray() # (10000, 10)
 
 # 2. model
 m = NASNetMobile(weights='imagenet', include_top=False, 
-                input_shape=(32,32,3))
-m.trainable = True # Freeze weight or train
-# m.trainable = False # Freeze weight or train
+                input_shape=(32*7,32*7,3))
+# m.trainable = True # Freeze weight or train
+m.trainable = False # Freeze weight or train
 
 model = Sequential()
 
+model.add(UpSampling2D(size=(7,7)))
 model.add(m)
-# model.add(Flatten())
-model.add(GlobalAveragePooling2D())
-model.add(Dense(2048, activation='relu'))
-model.add(Dropout(0.1))
+model.add(Flatten())
+# model.add(GlobalAveragePooling2D())
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(256, activation='relu'))
 model.add(Dense(10, activation='softmax')) # cifar10
 # model.add(Dense(100, activation='softmax')) # cifar100
@@ -74,20 +75,20 @@ model.compile(loss='categorical_crossentropy',
                 optimizer=op, metrics='acc')
 
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-es = EarlyStopping(monitor='val_loss', patience=10, 
+es = EarlyStopping(monitor='val_loss', patience=2, 
                 mode='min', verbose=1, restore_best_weights=True)
 lr = ReduceLROnPlateau(monitor='val_loss', patience=5, 
                 mode='auto', verbose=1, factor=0.8)
 
 import time 
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=100, batch_size=1024, verbose=2,
+hist = model.fit(x_train, y_train, epochs=10, batch_size=512, verbose=2,
     validation_split=0.05, callbacks=[es, lr])
 end_time = time.time() - start_time
 
 # 4. predict eval 
 
-loss = model.evaluate(x_test, y_test, batch_size=256)
+loss = model.evaluate(x_test, y_test, batch_size=64)
 print("======================================")
 
 acc = hist.history['acc']
@@ -96,10 +97,10 @@ loss = hist.history['loss']
 val_loss = hist.history['val_loss']
 
 print("total time : ", np.round(end_time/60, 0), 'min')
-print('acc : ',np.round(acc[-10], 5))
-print('val_acc : ',np.round(val_acc[-10], 5))
-print('loss : ',np.round(loss[-10], 5))
-print('val_loss : ',np.round(val_loss[-10], 5))
+print('acc : ',np.round(acc[-2], 5))
+print('val_acc : ',np.round(val_acc[-2], 5))
+print('loss : ',np.round(loss[-2], 5))
+print('val_loss : ',np.round(val_loss[-2], 5))
 
 '''
 ###############my acc###############
@@ -122,9 +123,18 @@ trainable F / GlobalAVGP
 trainable F / Flatten
 
 trainable T / GlobalAVGP
+total time :  120.0 min
+acc :  0.98139
+val_acc :  0.3304
+loss :  0.06044
+val_loss :  10.57148
 
 trainable T / Flatten
-
+total time :  30.0 min
+acc :  0.93901
+val_acc :  0.1348
+loss :  0.20237
+val_loss :  66.87776
 
 ###############cifar100###############
 trainable F / GlobalAVGP

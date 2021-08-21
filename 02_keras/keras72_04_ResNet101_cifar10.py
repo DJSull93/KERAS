@@ -18,16 +18,16 @@ from tensorflow.keras.applications import EfficientNetB0, EfficientNetB1, Effici
 from tensorflow.python.keras.layers.core import Dropout
 
 # 1. data cifa10
-x_train = np.load('./_save/_NPY/k55_x_data_cifar10_train.npy')
-x_test = np.load('./_save/_NPY/k55_x_data_cifar10_test.npy')
-y_train = np.load('./_save/_NPY/k55_y_data_cifar10_train.npy')
-y_test = np.load('./_save/_NPY/k55_y_data_cifar10_test.npy')
+# x_train = np.load('./_save/_NPY/k55_x_data_cifar10_train.npy')
+# x_test = np.load('./_save/_NPY/k55_x_data_cifar10_test.npy')
+# y_train = np.load('./_save/_NPY/k55_y_data_cifar10_train.npy')
+# y_test = np.load('./_save/_NPY/k55_y_data_cifar10_test.npy')
 
 # 1. data cifa100
-# x_train = np.load('./_save/_NPY/k55_x_data_cifar100_train.npy')
-# x_test = np.load('./_save/_NPY/k55_x_data_cifar100_test.npy')
-# y_train = np.load('./_save/_NPY/k55_y_data_cifar100_train.npy')
-# y_test = np.load('./_save/_NPY/k55_y_data_cifar100_test.npy')
+x_train = np.load('./_save/_NPY/k55_x_data_cifar100_train.npy')
+x_test = np.load('./_save/_NPY/k55_x_data_cifar100_test.npy')
+y_train = np.load('./_save/_NPY/k55_y_data_cifar100_train.npy')
+y_test = np.load('./_save/_NPY/k55_y_data_cifar100_test.npy')
 
 x_train = x_train.reshape(50000, 32*32*3)
 x_test = x_test.reshape(10000, 32*32*3)
@@ -62,8 +62,8 @@ model.add(GlobalAveragePooling2D())
 model.add(Dense(2048, activation='relu'))
 model.add(Dropout(0.1))
 model.add(Dense(256, activation='relu'))
-model.add(Dense(10, activation='softmax')) # cifar10
-# model.add(Dense(100, activation='softmax')) # cifar100
+# model.add(Dense(10, activation='softmax')) # cifar10
+model.add(Dense(100, activation='softmax')) # cifar100
 
 # 3. comple fit // metrics 'acc'
 from tensorflow.keras.optimizers import Adam
@@ -117,22 +117,59 @@ val_loss :  2.25513
 
 ###############cifar10###############
 trainable F / GlobalAVGP
-
+total time :  4.0 min
+acc :  0.45432
+val_acc :  0.4136
+loss :  1.53367
+val_loss :  1.65933
 
 trainable F / Flatten
+total time :  3.0 min
+acc :  0.45255
+val_acc :  0.3928
+loss :  1.54084
+val_loss :  1.71337
 
 trainable T / GlobalAVGP
+total time :  9.0 min
+acc :  0.98737
+val_acc :  0.7924
+loss :  0.03878
+val_loss :  1.07309
 
 trainable T / Flatten
-
+total time :  4.0 min
+acc :  0.80505
+val_acc :  0.0976
+loss :  0.57862
+val_loss :  331.86292
 
 ###############cifar100###############
 trainable F / GlobalAVGP
+total time :  4.0 min
+acc :  0.20112
+val_acc :  0.1444
+loss :  3.40652
+val_loss :  3.77062
 
 trainable F / Flatten
+total time :  5.0 min
+acc :  0.20903
+val_acc :  0.1548
+loss :  3.3718
+val_loss :  3.77925
 
 trainable T / GlobalAVGP
+total time :  3.0 min
+acc :  0.35198
+val_acc :  0.0084
+loss :  2.55964
+val_loss :  5925462.0
 
 trainable T / Flatten
-
+total time :  4.0 min
+acc :  0.56792
+val_acc :  0.0116
+loss :  1.55802
+val_loss :  251.21053
 '''

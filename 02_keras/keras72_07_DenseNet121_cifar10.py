@@ -117,22 +117,54 @@ val_loss :  2.25513
 
 ###############cifar10###############
 trainable F / GlobalAVGP
-
+total time :  3.0 min
+acc :  0.96968
+val_acc :  0.8236
+loss :  0.08702
+val_loss :  0.78774
 
 trainable F / Flatten
 
 trainable T / GlobalAVGP
+total time :  3.0 min
+acc :  0.96634
+val_acc :  0.8236
+loss :  0.09859
+val_loss :  0.71941
 
 trainable T / Flatten
-
+total time :  3.0 min
+acc :  0.92775
+val_acc :  0.7584
+loss :  0.21155
+val_loss :  0.74225
 
 ###############cifar100###############
 trainable F / GlobalAVGP
+total time :  1.0 min
+acc :  0.81139
+val_acc :  0.7012
+loss :  0.54454
+val_loss :  0.89439
 
 trainable F / Flatten
+total time :  1.0 min
+acc :  0.79661
+val_acc :  0.7008
+loss :  0.59192
+val_loss :  0.8693
 
 trainable T / GlobalAVGP
+total time :  3.0 min
+acc :  0.95566
+val_acc :  0.7964
+loss :  0.1262
+val_loss :  0.73777
 
 trainable T / Flatten
-
+total time :  4.0 min
+acc :  0.99309
+val_acc :  0.85
+loss :  0.0215
+val_loss :  0.78775
 '''
