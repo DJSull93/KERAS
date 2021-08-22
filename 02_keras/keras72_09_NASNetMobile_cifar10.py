@@ -58,11 +58,11 @@ model = Sequential()
 
 model.add(UpSampling2D(size=(7,7)))
 model.add(m)
-model.add(Flatten())
-# model.add(GlobalAveragePooling2D())
-model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.5))
+# model.add(Flatten())
+model.add(GlobalAveragePooling2D())
 model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(128, activation='relu'))
 # model.add(Dense(10, activation='softmax')) # cifar10
 model.add(Dense(100, activation='softmax')) # cifar100
 
@@ -82,7 +82,7 @@ lr = ReduceLROnPlateau(monitor='val_loss', patience=5,
 
 import time 
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=10, batch_size=512, verbose=2,
+hist = model.fit(x_train, y_train, epochs=10, batch_size=64, verbose=2,
     validation_split=0.05, callbacks=[es, lr])
 end_time = time.time() - start_time
 
@@ -161,7 +161,16 @@ loss :  1.94541
 val_loss :  1.92411
 
 trainable T / GlobalAVGP
+total time :  30.0 min
+acc :  0.69741
+val_acc :  0.0316
+loss :  1.08603
+val_loss :  5.4798
 
 trainable T / Flatten
-
+total time :  30.0 min
+acc :  0.58722
+val_acc :  0.0224
+loss :  1.43803
+val_loss :  8.89319
 '''

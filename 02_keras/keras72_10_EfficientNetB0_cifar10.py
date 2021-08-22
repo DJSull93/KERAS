@@ -117,22 +117,22 @@ val_loss :  2.25513
 
 ###############cifar10###############
 trainable F / GlobalAVGP
-
+x
 
 trainable F / Flatten
-
+x
 trainable T / GlobalAVGP
-
+x
 trainable T / Flatten
-
+x
 
 ###############cifar100###############
 trainable F / GlobalAVGP
-
+x
 trainable F / Flatten
-
+x
 trainable T / GlobalAVGP
-
+x
 trainable T / Flatten
-
+x
 '''
