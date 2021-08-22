@@ -18,16 +18,16 @@ from tensorflow.keras.applications import EfficientNetB0, EfficientNetB1, Effici
 from tensorflow.python.keras.layers.core import Dropout
 
 # 1. data cifa10
-x_train = np.load('./_save/_NPY/k55_x_data_cifar10_train.npy')
-x_test = np.load('./_save/_NPY/k55_x_data_cifar10_test.npy')
-y_train = np.load('./_save/_NPY/k55_y_data_cifar10_train.npy')
-y_test = np.load('./_save/_NPY/k55_y_data_cifar10_test.npy')
+# x_train = np.load('./_save/_NPY/k55_x_data_cifar10_train.npy')
+# x_test = np.load('./_save/_NPY/k55_x_data_cifar10_test.npy')
+# y_train = np.load('./_save/_NPY/k55_y_data_cifar10_train.npy')
+# y_test = np.load('./_save/_NPY/k55_y_data_cifar10_test.npy')
 
 # 1. data cifa100
-# x_train = np.load('./_save/_NPY/k55_x_data_cifar100_train.npy')
-# x_test = np.load('./_save/_NPY/k55_x_data_cifar100_test.npy')
-# y_train = np.load('./_save/_NPY/k55_y_data_cifar100_train.npy')
-# y_test = np.load('./_save/_NPY/k55_y_data_cifar100_test.npy')
+x_train = np.load('./_save/_NPY/k55_x_data_cifar100_train.npy')
+x_test = np.load('./_save/_NPY/k55_x_data_cifar100_test.npy')
+y_train = np.load('./_save/_NPY/k55_y_data_cifar100_train.npy')
+y_test = np.load('./_save/_NPY/k55_y_data_cifar100_test.npy')
 
 x_train = x_train.reshape(50000, 32*32*3)
 x_test = x_test.reshape(10000, 32*32*3)
@@ -51,8 +51,8 @@ y_test = one.transform(y_test).toarray() # (10000, 10)
 # 2. model
 m = NASNetMobile(weights='imagenet', include_top=False, 
                 input_shape=(32*7,32*7,3))
-# m.trainable = True # Freeze weight or train
-m.trainable = False # Freeze weight or train
+m.trainable = True # Freeze weight or train
+# m.trainable = False # Freeze weight or train
 
 model = Sequential()
 
@@ -63,8 +63,8 @@ model.add(Flatten())
 model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(256, activation='relu'))
-model.add(Dense(10, activation='softmax')) # cifar10
-# model.add(Dense(100, activation='softmax')) # cifar100
+# model.add(Dense(10, activation='softmax')) # cifar10
+model.add(Dense(100, activation='softmax')) # cifar100
 
 # 3. comple fit // metrics 'acc'
 from tensorflow.keras.optimizers import Adam
@@ -118,9 +118,18 @@ val_loss :  2.25513
 
 ###############cifar10###############
 trainable F / GlobalAVGP
-
+total time :  8.0 min
+acc :  0.84276
+val_acc :  0.826
+loss :  0.44461
+val_loss :  0.51497
 
 trainable F / Flatten
+total time :  7.0 min
+acc :  0.85379
+val_acc :  0.8404
+loss :  0.42587
+val_loss :  0.48205
 
 trainable T / GlobalAVGP
 total time :  120.0 min
@@ -138,8 +147,18 @@ val_loss :  66.87776
 
 ###############cifar100###############
 trainable F / GlobalAVGP
+total time :  8.0 min
+acc :  0.58973
+val_acc :  0.5548
+loss :  1.44531
+val_loss :  1.58383
 
 trainable F / Flatten
+total time :  8.0 min
+acc :  0.44467
+val_acc :  0.4844
+loss :  1.94541
+val_loss :  1.92411
 
 trainable T / GlobalAVGP
 
