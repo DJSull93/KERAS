@@ -138,7 +138,7 @@ val_acc :  0.886
 loss :  0.05311
 val_loss :  0.49121
 
-trainable T / Flatten
+trainable T / Flatten ##########
 total time :  15.0 min
 acc :  0.9916
 val_acc :  0.8608
