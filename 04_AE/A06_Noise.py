@@ -36,7 +36,7 @@ model.fit(x_train_noise, x_train, epochs=10, batch_size=1024)
 # 4. eval pred
 output = model.predict(x_test_noise)
 
-# # 5. visualize
+# 5. visualize
 from matplotlib import pyplot as plt
 import random
 

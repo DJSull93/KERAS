@@ -13,7 +13,7 @@ train_datagen = ImageDataGenerator(
     width_shift_range=0.1,
     height_shift_range=0.1,
     rotation_range=5,
-    zoom_range=1.2,
+    zoom_range=0.1,
     shear_range=0.7,
     fill_mode='nearest',
     validation_split=0.25
@@ -48,21 +48,30 @@ x_argmented = train_datagen.flow(x_argmented,
 x_train = np.concatenate((x_train, x_argmented)) # (100000, 28, 28, 1) 
 y_train = np.concatenate((y_train, y_argmented)) # (100000,)
 
-# 2. model
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
+x_train_noise = x_train + np.random.normal(0, 0.1, size=x_train.shape)
+x_test_noise = x_test + np.random.normal(0, 0.1, size=x_test.shape)
 
-model = Sequential()
-model.add(Conv2D(filters = 32, kernel_size=(3,3), input_shape =(150,150,3), activation= 'relu'))
-model.add(Conv2D(filters = 32, kernel_size=(3,3),  activation= 'relu'))
-model.add(MaxPooling2D(2,2))
-model.add(Conv2D(filters = 128, kernel_size=(3,3),  activation= 'relu'))
-model.add(Conv2D(filters = 128, kernel_size=(3,3),  activation= 'relu'))
-model.add(MaxPooling2D(2,2))
-model.add(Flatten())
-model.add(Dense(128, activation= 'relu'))
-model.add(Dense(32, activation= 'relu'))
-model.add(Dense(1, activation= 'sigmoid'))
+x_train_noise = np.clip(x_train_noise, a_min=0, a_max=1)
+x_test_noise = np.clip(x_test_noise, a_min=0, a_max=1)
+
+# 2. model
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Input, Dense, Conv2D, Flatten, MaxPooling2D, Dropout, UpSampling2D
+
+def autoEncoder(hidden_layer_size):
+    model = Sequential()
+    model.add(Conv2D(hidden_layer_size, kernel_size=(2, 2), 
+                input_shape=(150, 150, 3),
+                activation='relu', padding='same'))
+    model.add(MaxPooling2D(1,1))
+    model.add(Conv2D(100, (2, 2), activation='relu', padding='same'))
+    
+    model.add(UpSampling2D(size=(1,1)))
+
+    model.add(Conv2D(3, (2, 2), activation='sigmoid', padding='same'))
+    return model
+
+model = autoEncoder(hidden_layer_size=154)
 
 # 3. compile train
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
@@ -73,30 +82,49 @@ es = EarlyStopping(monitor='val_acc', patience=10, mode='auto', verbose=1)
 import time 
 
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=10000, verbose=2,
-    validation_split=0.2, callbacks=[es], steps_per_epoch=32,
-                validation_steps=4)
-end_time = time.time() - start_time
+hist = model.fit(x_train_noise, x_train, epochs=100, verbose=2,
+    validation_split=0.05, callbacks=[es])
+end_time = time.time() - start_time                          
 
-# 4. predict eval -> no need to
+output = model.predict(x_test_noise)
 
-acc = hist.history['acc']
-val_acc = hist.history['val_acc']
-loss = hist.history['loss']
-val_loss = hist.history['val_loss']
+# 5. visualize
+from matplotlib import pyplot as plt
+import random
 
-loss = model.evaluate(x_test, y_test)
-print('acc : ',acc[-10])
-print('val_acc : ',val_acc[-10])
-# print('loss : ',loss[-10])
-print('val_loss : ',val_loss[-10])                             
+fig, ((ax1, ax2, ax3, ax4, ax5), (ax6, ax7, ax8, ax9, ax10),
+    (ax11, ax12, ax13, ax14, ax15)) = \
+    plt.subplots(3, 5, figsize = (20, 7))
 
-'''
-with flow
-acc :  0.887201726436615
-val_acc :  0.5580589175224304
+# 이미지 다섯 개를 무작위로 고른다
+random_images = random.sample(range(output.shape[0]), 5)
 
-without flow
-acc :  0.938035249710083
-val_acc :  0.5513078570365906
-'''
+# original image
+for i, ax in enumerate([ax1, ax2, ax3, ax4, ax5]):
+    ax.imshow(x_test[random_images[i]].reshape(150, 150,3), cmap = 'gray')
+    if i == 0:
+        ax.set_ylabel('INPUT', size = 20)
+    ax.grid(False)
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+# noised image
+for i, ax in enumerate([ax6, ax7, ax8, ax9, ax10]):
+    ax.imshow(output[random_images[i]].reshape(150, 150,3), cmap = 'gray')
+    if i == 0:
+        ax.set_ylabel('OUTPUT', size = 20)
+    ax.grid(False)
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+# original image
+for i, ax in enumerate([ax11, ax12, ax13, ax14, ax15]):
+    ax.imshow(x_test_noise[random_images[i]].reshape(150, 150,3), cmap = 'gray')
+    if i == 0:
+        ax.set_ylabel('noise', size = 20)
+    ax.grid(False)
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+plt.tight_layout()
+plt.show()
