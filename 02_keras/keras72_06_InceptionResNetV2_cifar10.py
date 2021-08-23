@@ -5,7 +5,7 @@
 import pandas as pd
 import numpy as np
 from tensorflow.keras.models import Sequential 
-from tensorflow.keras.layers import Dense, Flatten, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, Flatten, GlobalAveragePooling2D, UpSampling2D
 from tensorflow.keras.applications import VGG16, VGG19, Xception
 from tensorflow.keras.applications import ResNet101, ResNet101V2
 from tensorflow.keras.applications import ResNet152, ResNet152V2
@@ -50,12 +50,13 @@ y_test = one.transform(y_test).toarray() # (10000, 10)
 
 # 2. model
 m = InceptionResNetV2(weights='imagenet', include_top=False, 
-                input_shape=(32,32,3))
+                input_shape=(32*3,32*3,3))
 m.trainable = True # Freeze weight or train
 # m.trainable = False # Freeze weight or train
 
 model = Sequential()
 
+model.add(UpSampling2D(size=(3,3)))
 model.add(m)
 # model.add(Flatten())
 model.add(GlobalAveragePooling2D())
@@ -81,13 +82,13 @@ lr = ReduceLROnPlateau(monitor='val_loss', patience=5,
 
 import time 
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=100, batch_size=1024, verbose=2,
+hist = model.fit(x_train, y_train, epochs=20, batch_size=256, verbose=2,
     validation_split=0.05, callbacks=[es, lr])
 end_time = time.time() - start_time
 
 # 4. predict eval 
 
-loss = model.evaluate(x_test, y_test, batch_size=256)
+loss = model.evaluate(x_test, y_test, batch_size=128)
 print("======================================")
 
 acc = hist.history['acc']
