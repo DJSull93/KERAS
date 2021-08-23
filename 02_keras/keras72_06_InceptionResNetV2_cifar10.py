@@ -123,6 +123,11 @@ trainable F / GlobalAVGP
 trainable F / Flatten
 
 trainable T / GlobalAVGP
+total time :  32.0 min
+acc :  0.9896
+val_acc :  0.906
+loss :  0.03012
+val_loss :  0.38977
 
 trainable T / Flatten
 
