@@ -1,10 +1,14 @@
-# ptyhon 3.8.8. env
+# In ptyhon 3.8.8. env
 # -> Session doesn't work
 
 import tensorflow as tf
 from tensorflow.python.client.session import Session
 
+print(tf.executing_eagerly()) # True
+
 tf.compat.v1.disable_eager_execution() # -> to use Session 
+
+print(tf.executing_eagerly()) # False
 
 print(tf.__version__)
 
@@ -17,8 +21,4 @@ print(Hello)
 sess = tf.compat.v1.Session() # -> also change version of Session() 
 
 print(sess.run(Hello))
-
-
-
-
 
