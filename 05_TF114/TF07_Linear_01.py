@@ -10,10 +10,10 @@ y_train = [3,5,7]
 W = tf.Variable(1, dtype=tf.float32) # random initial number
 b = tf.Variable(1, dtype=tf.float32)
 
-hyperthesis = x_train * W + b
-# hyperthesis : 통상적인 y값의 명칭 =. f(x) = wx + b
+hypothesis = x_train * W + b
+# hypothesis : 통상적인 y값의 명칭 =. f(x) = wx + b
 
-loss = tf.reduce_mean(tf.square(hyperthesis - y_train))
+loss = tf.reduce_mean(tf.square(hypothesis - y_train))
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 train = optimizer.minimize(loss)

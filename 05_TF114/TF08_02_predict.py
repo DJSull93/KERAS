@@ -20,9 +20,9 @@ y_train = tf.compat.v1.placeholder(tf.float32, shape=[None])
 W = tf.compat.v1.Variable(tf.random_normal([1]), dtype=tf.float32)
 b = tf.compat.v1.Variable(tf.random_normal([1]), dtype=tf.float32)
 
-hyperthesis = x_train * W + b
+hypothesis = x_train * W + b
 
-loss = tf.compat.v1.reduce_mean(tf.square(hyperthesis - y_train))
+loss = tf.compat.v1.reduce_mean(tf.square(hypothesis - y_train))
 
 optimizer = tf.compat.v1.train.GradientDescentOptimizer(learning_rate=0.02)
 train = optimizer.minimize(loss)
@@ -44,11 +44,11 @@ for step in range(2000):
 
 x_test = tf.compat.v1.placeholder(tf.float32, shape=[None])
 
-hyperthesis_p = x_test * W_val + b_val
+hypothesis_p = x_test * W_val + b_val
 
-pred1 = sess.run(hyperthesis_p, feed_dict={x_test:[4]})
-pred2 = sess.run(hyperthesis_p, feed_dict={x_test:[5,6]})
-pred3 = sess.run(hyperthesis_p, feed_dict={x_test:[6,7,8]})
+pred1 = sess.run(hypothesis_p, feed_dict={x_test:[4]})
+pred2 = sess.run(hypothesis_p, feed_dict={x_test:[5,6]})
+pred3 = sess.run(hypothesis_p, feed_dict={x_test:[6,7,8]})
 
 print("predict [4] :",pred1)
 print("predict [5, 6] :",pred2)

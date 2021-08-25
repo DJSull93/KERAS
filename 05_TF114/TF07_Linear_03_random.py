@@ -14,9 +14,9 @@ y_train = [3,5,7]
 W = tf.Variable(tf.random_normal([1]), dtype=tf.float32)
 b = tf.Variable(tf.random_normal([1]), dtype=tf.float32)
 
-hyperthesis = x_train * W + b
+hypothesis = x_train * W + b
 
-loss = tf.reduce_mean(tf.square(hyperthesis - y_train))
+loss = tf.reduce_mean(tf.square(hypothesis - y_train))
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 train = optimizer.minimize(loss)

@@ -17,9 +17,9 @@ y_train = tf.compat.v1.placeholder(tf.float32, shape=[None])
 W = tf.compat.v1.Variable(tf.random_normal([1]), dtype=tf.float32)
 b = tf.compat.v1.Variable(tf.random_normal([1]), dtype=tf.float32)
 
-hyperthesis = x_train * W + b
+hypothesis = x_train * W + b
 
-loss = tf.compat.v1.reduce_mean(tf.square(hyperthesis - y_train))
+loss = tf.compat.v1.reduce_mean(tf.square(hypothesis - y_train))
 
 optimizer = tf.compat.v1.train.GradientDescentOptimizer(learning_rate=0.02)
 train = optimizer.minimize(loss)
