@@ -16,3 +16,4 @@ sess = Session()
 sess.run(init)
 
 print("x, y, z : ",sess.run([x,y,z])) # x :  [2]
+# x, y, z :  [array([2]), array([3]), array([14])]

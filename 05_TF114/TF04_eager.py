@@ -22,3 +22,6 @@ sess = tf.compat.v1.Session() # -> also change version of Session()
 
 print(sess.run(Hello))
 
+'''
+b'Hello world'
+'''

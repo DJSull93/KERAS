@@ -29,3 +29,11 @@ for step in range(2000):
     if step % 20 == 0:
         print('step :',step, 'loss :', sess.run(loss), 
                 'W :', sess.run(W), 'b :', sess.run(b))
+
+'''
+step : 1900 loss : 6.95384e-06 W : [1.9969373] b : [1.0069622]
+step : 1920 loss : 6.3161083e-06 W : [1.9970812] b : [1.0066352]
+step : 1940 loss : 5.7357865e-06 W : [1.9972183] b : [1.0063233]
+step : 1960 loss : 5.2094438e-06 W : [1.997349] b : [1.0060263]
+step : 1980 loss : 4.7324215e-06 W : [1.9974735] b : [1.0057431]
+'''
