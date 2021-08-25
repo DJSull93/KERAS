@@ -10,7 +10,6 @@ y_data = datasets.target #  (569,)
 
 # print(x.shape, y.shape)
 
-
 from sklearn.model_selection import train_test_split
 
 y_data = y_data.reshape(-1,1) # (506, 1)
@@ -40,7 +39,6 @@ predicted = tf.cast(hypothesis > 0.5, dtype = tf.float32)
 
 accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted, y), dtype=tf.float32))
 
-
 accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted,y), dtype = tf.float32))
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
@@ -51,11 +49,9 @@ with tf.Session() as sess:
         if step % 50 == 0:
             print(f'step : {step} \ncost : {cost_val} \nhy_val : \n{hy_val}')
 
-
     h , c, a = sess.run([hypothesis,predicted,accuracy], feed_dict={x:x_test, y:y_test})
 
     print(f'predict value : {h[0:5]} \n "original value: \n{c[0:5]} \naccuracy: : {a}')
-
 
 '''
 predict value : [[0.52031285]
