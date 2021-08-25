@@ -7,9 +7,9 @@ y = [2., 4., 6.]
 
 W = tf.placeholder(tf.float32)
 
-hyporthesis = x * W
+hypothesis = x * W
 
-cost = tf.reduce_mean(tf.square(y-hyporthesis)) # loss =. cost
+cost = tf.reduce_mean(tf.square(y-hypothesis)) # loss =. cost
 
 W_history = []
 cost_history = []

@@ -16,10 +16,10 @@ y = tf.placeholder(tf.float32, shape=[None,1])
 W = tf.Variable(tf.random.normal([3,1]), name='weight')
 b = tf.Variable(tf.random.normal([1]), name='bias')
 
-# hyporthesis = x * W + b # 행렬 연산 에러 발생 
-hyporthesis = tf.matmul(x, W) + b
+# hypothesis = x * W + b # 행렬 연산 에러 발생 
+hypothesis = tf.matmul(x, W) + b
 
-cost = tf.reduce_mean(tf.square(y-hyporthesis))
+cost = tf.reduce_mean(tf.square(y-hypothesis))
 
 # optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.00004)
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=1e-5)
@@ -29,7 +29,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
 for epochs in range(2001):
-    cost_val, hy_val, _ = sess.run([cost, hyporthesis, train],
+    cost_val, hy_val, _ = sess.run([cost, hypothesis, train],
         feed_dict={x:x_data, y:y_data})
     if epochs % 10 == 0:
         print(epochs, "cost :", cost_val, "\n", hy_val)

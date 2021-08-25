@@ -22,9 +22,9 @@ W2 = tf.compat.v1.Variable(tf.random_normal([1]), name='weight2')
 W3 = tf.compat.v1.Variable(tf.random_normal([1]), name='weight3')
 b = tf.compat.v1.Variable(tf.random_normal([1]), name='bias')
 
-hyporthesis = x1*W1 + x1*W2 + x1*W3 + b
+hypothesis = x1*W1 + x1*W2 + x1*W3 + b
 
-cost = tf.reduce_mean(tf.square(y-hyporthesis))
+cost = tf.reduce_mean(tf.square(y-hypothesis))
 
 # optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.00004)
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=4e-5)
@@ -34,7 +34,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
 for epochs in range(2001):
-    cost_val, hy_val, _ = sess.run([cost, hyporthesis, train],
+    cost_val, hy_val, _ = sess.run([cost, hypothesis, train],
         feed_dict={x1:x1_data, x2:x2_data, x3:x3_data, y:y_data})
     if epochs % 10 == 0:
         print(epochs, "cost :", cost_val, "\n", hy_val)
