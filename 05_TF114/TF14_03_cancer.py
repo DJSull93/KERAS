@@ -46,7 +46,7 @@ with tf.Session() as sess:
     for step in range(5001):
         cost_val,hy_val ,_ = sess.run([cost, hypothesis,train], feed_dict={x:x_train, y:y_train})
 
-        if step % 50 == 0:
+        if step % 500 == 0:
             print(f'step : {step} \ncost : {cost_val} \nhy_val : \n{hy_val}')
 
     h , c, a = sess.run([hypothesis,predicted,accuracy], feed_dict={x:x_test, y:y_test})
