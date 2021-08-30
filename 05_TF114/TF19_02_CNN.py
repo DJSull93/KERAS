@@ -95,10 +95,6 @@ hypothesis = tf.nn.softmax(L7)
 # print(hypothesis) # shape=(?, 10)
 
 # 3. compile train
-# learning_rate = 0.001
-# epochs = 15
-# batch_size = 100
-# total_batch = int(len(x_train)/batch_size)
 
 loss = tf.reduce_mean(-tf.reduce_sum(y * tf.log(hypothesis), axis=1)) 
 
