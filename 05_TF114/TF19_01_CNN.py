@@ -40,9 +40,7 @@ L1 = tf.nn.conv2d(x, w1, strides=[1,1,1,1], padding='SAME')
 print(w1) # shape=(3, 3, 1, 32)
 print(L1) # shape=(?, 28, 28, 32)
 
-
-
-
+# Compare with Tensor 2
 # model = Sequential()
 # model.add(Conv2D(filters=32, kernel_size=(3,3), strides=1,
 #             padding='same', input_shape=(28, 28, 1)))
