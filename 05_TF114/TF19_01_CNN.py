@@ -33,7 +33,7 @@ y = tf.placeholder(tf.float32, [None, 10])
 w1 = tf.get_variable('w1', shape=[3, 3, 1, 32])
 # [3, 3, 1, 32] in weight : 
 # [3, 3] : kernel_size
-# [1] : input channel
+# [1] : input channel = color
 # [32] : filters = output channel
 L1 = tf.nn.conv2d(x, w1, strides=[1,1,1,1], padding='SAME')
 

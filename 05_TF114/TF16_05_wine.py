@@ -48,9 +48,6 @@ with tf.Session() as sess:
         if epochs % 1000 == 0:
             print(epochs, "cost :", cost_val)
 
-    predict = sess.run(hypothesis, feed_dict={x:x_test})
-    print(sess.run(tf.argmax(predict, 1)))
-
     y_pred = sess.run(hypothesis, feed_dict = {x:x_test})
     y_pred = np.argmax(y_pred, axis= 1)
     y_test = np.argmax(y_test, axis= 1)
