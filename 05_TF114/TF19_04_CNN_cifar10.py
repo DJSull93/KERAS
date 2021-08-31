@@ -21,37 +21,69 @@ from tensorflow.keras.utils import to_categorical
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
 
-x_train = x_train.reshape(50000, 32*32*3).astype('float32')/255
-x_test = x_test.reshape(10000, 32*32*3).astype('float32')/255
+x_train = x_train.reshape(50000, 32, 32, 3).astype('float32')/255
+x_test = x_test.reshape(10000, 32, 32, 3).astype('float32')/255
 
-learning_rate = 0.00002
-epochs = 300
-batch_size = 1000
+learning_rate = 0.00014
+epochs = 220
+batch_size = 1024
 total_batch = int(len(x_train)/batch_size)
 
-x = tf.compat.v1.placeholder(tf.float32, [None, 32*32*3])
+x = tf.compat.v1.placeholder(tf.float32, [None, 32, 32, 3])
 y = tf.compat.v1.placeholder(tf.float32, [None, 10])
 
 # 2. model
-w11 = tf.compat.v1.get_variable('weight11', shape = [3072, 1024], initializer = tf.initializers.he_normal()) 
-b11 = tf.Variable(tf.random.normal([1,1024], name = 'bias1'))    
-layer11 = tf.nn.relu(tf.matmul(x, w11) + b11) 
+w1 = tf.compat.v1.get_variable('w1', shape=[3, 3, 3, 32])
+L1 = tf.nn.conv2d(x, w1, strides=[1,1,1,1], padding='SAME')
+L1 = tf.nn.relu(L1)
 
-w1 = tf.compat.v1.get_variable('weight1', shape = [1024, 512], initializer = tf.initializers.he_normal()) 
-b1 = tf.Variable(tf.random.normal([1,512], name = 'bias1'))    
-layer1 = tf.nn.relu(tf.matmul(layer11, w1) + b1)
+w2 = tf.compat.v1.get_variable('w2', shape=[3, 3, 32, 32])
+L2 = tf.nn.conv2d(L1, w2, strides=[1,1,1,1], padding='SAME')
+L2 = tf.nn.relu(L2)
+L2_maxpool = tf.nn.max_pool(L2, ksize=[1,2,2,1], # 1, 1 -> 칸채우기용
+                            strides=[1,2,2,1], # 2, 2 -> pooling size
+                            padding='SAME')
 
-w2 = tf.compat.v1.get_variable('weight2', shape = [512, 256], initializer = tf.initializers.he_normal())
-b2 = tf.Variable(tf.random.normal([1,256], name = 'bias2'))    
-layer2 = tf.nn.elu(tf.matmul(layer1, w2) + b2) 
+w3 = tf.compat.v1.get_variable('w3', shape=[3, 3, 32, 64])
+L3 = tf.nn.conv2d(L2_maxpool, w3, strides=[1,1,1,1], padding='SAME')
+L3 = tf.nn.relu(L3)
 
-w3 = tf.compat.v1.get_variable('weight3', shape = [256, 32], initializer = tf.initializers.he_normal())
-b3 = tf.Variable(tf.random.normal([1,32], name = 'bias3'))   
-layer3 = tf.nn.selu(tf.matmul(layer2, w3) + b3) 
+w33 = tf.compat.v1.get_variable('w33', shape=[3, 3, 64, 64])
+L33 = tf.nn.conv2d(L3, w33, strides=[1,1,1,1], padding='SAME')
+L33 = tf.nn.relu(L33)
+L3_maxpool = tf.nn.max_pool(L33, ksize=[1,2,2,1], # 1, 1 -> 칸채우기용
+                            strides=[1,2,2,1], # 2, 2 -> pooling size
+                            padding='SAME')
 
-w4 = tf.compat.v1.get_variable('weight4', shape = [32, 10])
-b4 = tf.Variable(tf.random.normal([1,10], name = 'bias4'))   
-hypothesis = tf.nn.softmax(tf.matmul(layer3, w4) + b4)
+# w4 = tf.compat.v1.get_variable('w4', shape=[3, 3, 64, 128])
+# L4 = tf.nn.conv2d(L3_maxpool, w4, strides=[1,1,1,1], padding='SAME')
+# L4 = tf.nn.relu(L4)
+
+# w44 = tf.compat.v1.get_variable('w44', shape=[3, 3, 128, 128])
+# L44 = tf.nn.conv2d(L4, w44, strides=[1,1,1,1], padding='SAME')
+# L44 = tf.nn.relu(L44)
+# L4_maxpool = tf.nn.max_pool(L4, ksize=[1,2,2,1], # 1, 1 -> 칸채우기용
+#                             strides=[1,2,2,1], # 2, 2 -> pooling size
+#                             padding='SAME')
+# print(L4_maxpool)
+
+# Flatten
+L_flat = tf.compat.v1.reshape(L3_maxpool, (-1, 8*8*64))
+
+w5 = tf.compat.v1.get_variable('w5', shape=[8*8*64, 128])
+b5 = tf.Variable(tf.random.normal([128]), name='b5')
+L5 = tf.compat.v1.matmul(L_flat, w5) + b5
+L5 = tf.nn.relu(L5)
+
+w6 = tf.compat.v1.get_variable('w6', shape=[128, 84])
+b6 = tf.Variable(tf.random.normal([84]), name='b6')
+L6 = tf.compat.v1.matmul(L5, w6) + b6
+L6 = tf.nn.relu(L6)
+
+w7 = tf.compat.v1.get_variable('w7', shape=[84, 10])
+b7 = tf.Variable(tf.random.normal([10]), name='b6')
+L7 = tf.compat.v1.matmul(L6, w7) + b7
+hypothesis = tf.nn.softmax(L7)
 
 # 3. compile train
 
@@ -83,3 +115,6 @@ with tf.compat.v1.Session() as sess:
 
 # Epochs :  0100 loss : 0.019202127
 # Acc : 0.5279
+
+# Epochs :  0090 loss : 0.012972048
+# Acc : 0.6776

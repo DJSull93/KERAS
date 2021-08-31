@@ -47,11 +47,11 @@ w2 = tf.compat.v1.get_variable('weight2', shape = [256, 128], initializer = tf.i
 b2 = tf.Variable(tf.random.normal([1,128], name = 'bias2'))    
 layer2 = tf.nn.elu(tf.matmul(layer1, w2) + b2) 
 
-w3 = tf.compat.v1.get_variable('weight3', shape = [128, 64], initializer = tf.initializers.he_normal())
-b3 = tf.Variable(tf.random.normal([1,64], name = 'bias3'))   
+w3 = tf.compat.v1.get_variable('weight3', shape = [128, 32], initializer = tf.initializers.he_normal())
+b3 = tf.Variable(tf.random.normal([1,32], name = 'bias3'))   
 layer3 = tf.nn.selu(tf.matmul(layer2, w3) + b3) 
 
-w4 = tf.compat.v1.get_variable('weight4', shape = [64, 10])
+w4 = tf.compat.v1.get_variable('weight4', shape = [32, 10])
 b4 = tf.Variable(tf.random.normal([1,10], name = 'bias4'))   
 hypothesis = tf.nn.softmax(tf.matmul(layer3, w4) + b4)
 
