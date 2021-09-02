@@ -17,3 +17,4 @@ print("sess.run(node3) : ",sess.run(node3))
 node1, node2 :  [3.0, 4.0]
 sess.run(node3) :  7.0
 '''
+########################################
