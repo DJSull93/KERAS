@@ -92,4 +92,3 @@ loss = model.evaluate(x_test, y_test)
 print('acc : ',acc[-10])
 print('val_acc : ',val_acc[-10])
 print('val_loss : ',val_loss[-10])
-##########################################################################
