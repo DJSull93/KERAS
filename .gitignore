@@ -2,6 +2,12 @@ _save
 
 _test
 
+auto_model
+
+image_classifier
+
+structured_data_regressor
+
 00_1_dacon_newstopic/_data
 
 00_1_dacon_newstopic/_save_csv
