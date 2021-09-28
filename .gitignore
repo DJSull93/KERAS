@@ -8,6 +8,10 @@ image_classifier
 
 structured_data_regressor
 
+00_3_dacon_samsung/_data
+
+00_3_dacon_samsung/_save_csv
+
 00_1_dacon_newstopic/_data
 
 00_1_dacon_newstopic/_save_csv
