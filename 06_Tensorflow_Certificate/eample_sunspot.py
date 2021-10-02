@@ -64,7 +64,7 @@ model.compile(loss=tf.keras.losses.Huber(),
 import time
 st = time.time()
 
-hist = model.fit(train_set, epochs=1000, callbacks=[lr_schedule])
+hist = model.fit(train_set, epochs=92, callbacks=[lr_schedule])
 
 et = time.time() - st
 
@@ -82,6 +82,8 @@ rnn_f = rnn_f[split_time - window_size:-1, -1, 0]
 loss = tf.keras.metrics.mean_absolute_error(x_valid, rnn_f).numpy()
 print('loss = ', loss)
 print('time = ', et)
+
 '''
-loss = 
+loss =  15.120932
+time =  84.65899896621704
 '''
