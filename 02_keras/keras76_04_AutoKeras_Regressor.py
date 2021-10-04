@@ -19,4 +19,4 @@ model.fit(x, y, epochs=2, validation_split=0.2)
 res = model.evaluate(x, y)
 print(res)
 
-##########
+####
